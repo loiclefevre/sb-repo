@@ -1,0 +1,8 @@
+name=JSONInsert
+version=1.0.0
+variant=OracleDatabase
+infrastructure=new
+deploy=OCI_worker_and_data_store.infra
+run=standard.run
+report=standard.report
+destroy=standard.destroy
