@@ -3,7 +3,7 @@
 name=JSONInsert
 version=1.0.0
 variant=Oracle Database
-default.properties=./defaults.properties
+defaults.properties=./defaults.properties
 
 //--- Infrastructure ---
 %iaas
