@@ -1,8 +1,22 @@
+#--- Benchmark description ---
+%description
 name=JSONInsert
 version=1.0.0
-variant=OracleDatabase
-infrastructure=new
-deploy=OCI_worker_and_DBCS_data_store.infra
-run=standard.run
-report=standard.report
-destroy=standard.destroy
+variant=Oracle Database
+default.properties=./defaults.properties
+
+#--- Infrastructure ---
+%iaas
+deploy_worker( /oracle/oci/vm.infra )
+deploy_data_store( /oracle/oci/dbcs_vm.infra )
+
+%components
+deploy_worker( /java/openjdk, version=10 )
+configure_data_store( ./jsoninsert-oracle )
+
+%run
+java
+
+%report
+
+%destroy
