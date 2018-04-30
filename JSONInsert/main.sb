@@ -7,15 +7,15 @@ default.properties=./defaults.properties
 
 #--- Infrastructure ---
 %iaas
-deploy_worker( /oracle/oci/vm.infra )
-deploy_data_store( /oracle/oci/dbcs_vm.infra )
+#deploy_worker( /oracle/oci/vm.infra )
+#deploy_data_store( /oracle/oci/dbcs_vm.infra )
 
 %configure
-deploy_worker( /java/openjdk, version=10 )
-configure_data_store( ./jsoninsert-oracle )
+#deploy_worker( /java/openjdk, version=10 )
+#configure_data_store( ./jsoninsert-oracle )
 
 %run
-java
+#java
 
 %report
 
