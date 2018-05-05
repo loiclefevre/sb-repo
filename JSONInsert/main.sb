@@ -7,7 +7,7 @@ defaults.properties=sb.properties
 
 //--- Infrastructure ---
 %iaas
-deploy_worker( @/oracle/oci/vm.infra )
+deploy_worker(@/oracle/oci/vm.tf)
 // deploy_data_store( /oracle/oci/dbcs_vm.infra )
 
 %configure
