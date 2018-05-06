@@ -80,3 +80,24 @@ resource "oci_core_default_security_list" "default_security_list" {
   }
 }
 
+resource "oci_core_default_route_table" "default_route_table" {
+  manage_default_resource_id = "${oci_core_virtual_network.VCN-SB.default_route_table_id}"
+  display_name = "Default Route Table for VCN-SB-${var.sbName}"
+  route_rules {
+    cidr_block = "0.0.0.0/0"
+    network_entity_id = "${oci_core_internet_gateway.IG-SB.id}"
+  }
+}
+
+resource "oci_core_subnet" "SN-SB-Data" {
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[var.data_store["AD"]],"name")}"
+  cidr_block = "10.0.0.0/24"
+  display_name = "SN-SB-Data"
+  dns_label = "data"
+  compartment_id = "${var.compartment_ocid}"
+  vcn_id = "${oci_core_virtual_network.VCN-SB.id}"
+  security_list_ids = ["${oci_core_virtual_network.VCN-SB.default_security_list_id}"]
+  route_table_id = "${oci_core_default_route_table.default_route_table.id}"
+  dhcp_options_id = "${oci_core_virtual_network.VCN-SB.default_dhcp_options_id}"
+}
+
