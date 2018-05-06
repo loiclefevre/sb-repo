@@ -18,3 +18,65 @@ resource "oci_core_virtual_network" "VCN-SB" {
   display_name   = "VCN-SB-${var.sbName}"
   dns_label      = "sb"
 }
+
+resource "oci_core_internet_gateway" "IG-SB" {
+  compartment_id = "${var.compartment_ocid}"
+  display_name = "IG-SB-${var.sbName}"
+  vcn_id = "${oci_core_virtual_network.VCN-SB.id}"
+}
+
+resource "oci_core_default_security_list" "default_security_list" {
+  manage_default_resource_id = "${oci_core_virtual_network.VCN-SB.default_security_list_id}"
+  display_name="Default Security List for VCN-SB-${var.sbName}"
+  
+  // allow outbound tcp traffic on all ports
+  egress_security_rules {
+    destination = "0.0.0.0/0"
+    protocol = "6"
+    stateless = "false"
+  }
+
+  // allow inbound ssh traffic
+  ingress_security_rules {
+    protocol = 6 // tcp
+    source = "0.0.0.0/0"
+    stateless = false
+    tcp_options {
+      min = 22
+      max = 22
+    }
+  }
+
+  // allow inbound icmp traffic of a specific type
+  ingress_security_rules {
+    protocol  = 1
+    source    = "0.0.0.0/0"
+    stateless = false
+    icmp_options {
+      type = 3
+      code = 4
+    }
+  }
+
+  // allow inbound icmp traffic from VCN of a specific type
+  ingress_security_rules {
+    protocol  = 1
+    source    = "10.0.0.0/24"
+    stateless = false
+    icmp_options {
+      type = 3
+    }
+  }
+
+  // allow inbound VNC traffic
+  ingress_security_rules {
+    protocol = "6" // tcp
+    source = "0.0.0.0/0"
+    stateless = false
+    tcp_options {
+      min = 5901
+      max = 5901
+    }
+  }
+}
+
