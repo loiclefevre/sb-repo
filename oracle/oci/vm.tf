@@ -90,7 +90,7 @@ resource "oci_core_default_route_table" "default_route_table" {
 }
 
 resource "oci_core_subnet" "SN-SB-Data" {
-  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[var.data_store["AD"]],"name")}"
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[var.datastore_availability_domain],"name")}"
   cidr_block = "10.0.0.0/24"
   display_name = "SN-SB-Data"
   dns_label = "data"
@@ -114,15 +114,15 @@ variable "ImageOCID" {
 }
 
 resource "oci_core_instance" "SB-Client" {
-    availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[var.data_store["AD"]],"name")}" 
+    availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[var.client_availability_domain],"name")}" 
     compartment_id = "${var.compartment_ocid}"
-    display_name = "SN-SB-CLIENT-${var.sbName}"
+    display_name = "SB-CLIENT-${var.sbName}"
     hostname_label = "client"
     source_details {
         source_type = "image"
         source_id = "${var.ImageOCID[var.region]}"
     }    
-shape = "VM.Standard1.2"
+    shape = "VM.Standard1.2"
     subnet_id = "${oci_core_subnet.SN-SB-Data.id}"
     extended_metadata {
         ssh_authorized_keys = "${var.ssh_public_key}"
