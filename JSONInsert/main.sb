@@ -8,10 +8,14 @@ defaults.properties=sb.properties
 //--- Infrastructure ---
 %iaas
 deploy_worker(@/oracle/oci/vm.tf)
-// deploy_data_store( /oracle/oci/dbcs_vm.infra )
+
+%paas
+//deploy_data_store(@/oracle/oci/dbcs_vm.tf)
 
 %configure
-// deploy_worker( /java/openjdk, version=10 )
+create_user_worker(sb)
+//install_worker(@/oracle/oci/openjdk,version=10,user=sb)
+//install_bench(@./json-insert.jar,user=sb)
 /* configure_data_store( ./jsoninsert-oracle ) */
 
 %run
