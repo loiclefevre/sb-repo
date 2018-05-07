@@ -124,9 +124,10 @@ resource "oci_core_instance" "SB-Client" {
     }    
     shape = "VM.Standard1.2"
     subnet_id = "${oci_core_subnet.SN-SB-Data.id}"
-    extended_metadata {
-        ssh_authorized_keys = "${var.ssh_public_key}"
-    }
+    metadata {
+		  ssh_authorized_keys = "${var.ssh_public_key}"
+		  user_data = "${base64encode(file(var.oci_custom_bootstrap_file_name))}"
+	}
 }
 
 # Output the private and public IPs of the instance
