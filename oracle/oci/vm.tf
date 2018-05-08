@@ -143,3 +143,7 @@ output "SB-Client-PublicIPs" {
 output "SB-Client-BootVolumeIDs" {
   value = ["${oci_core_instance.SB-Client.*.boot_volume_id}"]
 }
+
+output "SB-Client-ImageIDs" {
+  value = ["${oci_core_instance.SB-Client.*.source_id}"]
+}
