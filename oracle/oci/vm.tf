@@ -145,5 +145,5 @@ output "SB-Client-BootVolumeIDs" {
 }
 
 output "SB-Client-ImageIDs" {
-  value = ["${oci_core_instance.SB-Client.*.source_id}"]
+  value = ["${oci_core_instance.SB-Client.source_details.source_id}"]
 }
