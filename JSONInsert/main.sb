@@ -13,12 +13,19 @@ wk_deploy(@/oracle/oci/vm.tf)
 //deploy_data_store(@/oracle/oci/dbcs_vm.tf)
 
 %configure
-wk_create_user(sb)
+wk_create_user(sb) // screaming bench user
 wk_set_user(sb)
+// download and uncompress open JDK 10
 wk_download_and_uncompress(
   https://download.java.net/java/GA/jdk10/10.0.1/fb4372174a714e6b8c52526dc134031e/10/openjdk-10.0.1_linux-x64_bin.tar.gz,
   ~/sb )
-//install_worker(@/oracle/oci/openjdk,version=10,user=sb)
+// download and compile JSON Insert testcase
+wk_download(@JSONInsert.java,~/sb)
+wk_set_env(JAVA_HOME,~/sb/jdk-10.0.1)
+wk_set_env(PATH,+${JAVA_HOME}/bin)
+wk_run(~/sb,javac -cp JSONInsert.java)
+wk_run(~/sb,java -cp . org.sb.jsoninsert.Main 2)
+
 //install_bench(@./json-insert.jar,user=sb)
 /* configure_data_store( ./jsoninsert-oracle ) */
 
