@@ -13,7 +13,8 @@ wk_deploy(@/oracle/oci/vm.tf)
 //deploy_data_store(@/oracle/oci/dbcs_vm.tf)
 
 %configure
-wk_create_user(sb) // screaming bench user
+// screaming bench user
+wk_create_user(sb)
 wk_set_user(sb)
 // download and uncompress open JDK 10
 wk_download_and_uncompress(
