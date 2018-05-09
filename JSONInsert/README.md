@@ -1,0 +1,1 @@
+JSON documents insert benchmark.
