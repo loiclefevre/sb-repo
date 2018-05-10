@@ -22,10 +22,10 @@ wk_download_and_uncompress(
   ~/sb )
 // download and compile JSON Insert testcase
 wk_download(@JSONInsert.java,~/sb)
-wk_set_env(JAVA_HOME,~/sb/jdk-10.0.1)
-wk_set_env(PATH,+${JAVA_HOME}/bin)
-wk_run(~/sb,javac -cp JSONInsert.java)
-wk_run(~/sb,java -cp . org.sb.jsoninsert.Main 2)
+//wk_set_env(JAVA_HOME,~/sb/jdk-10.0.1)
+//wk_set_env(PATH,+${JAVA_HOME}/bin)
+//wk_run(~/sb,javac -cp JSONInsert.java)
+//wk_run(~/sb,java -cp . org.sb.jsoninsert.Main 2)
 
 //install_bench(@./json-insert.jar,user=sb)
 /* configure_data_store( ./jsoninsert-oracle ) */
