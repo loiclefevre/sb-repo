@@ -26,7 +26,7 @@ wk_download(@ojdbc8.jar,~/sb/lib)
 wk_set_env(JAVA_HOME,~/sb/jdk-10.0.1)
 wk_set_env(PATH,+${JAVA_HOME}/bin)
 wk_run(~/sb,javac -cp ./lib/ojdbc8.jar Main.java,true)
-wk_run(~/sb,java -cp .:./lib/ojdbc8.jar org.sb.jsoninsert.Main 2,true)
+wk_run(~/sb,java -cp .:./lib/ojdbc8.jar Main 2,true)
 
 //install_bench(@./json-insert.jar,user=sb)
 /* configure_data_store( ./jsoninsert-oracle ) */
