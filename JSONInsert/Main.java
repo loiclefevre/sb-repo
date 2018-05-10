@@ -1,5 +1,3 @@
-package org.sb.jsoninsert;
-
 import oracle.jdbc.pool.OracleDataSource;
 
 import java.sql.Connection;
