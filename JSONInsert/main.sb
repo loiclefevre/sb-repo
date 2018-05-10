@@ -10,7 +10,8 @@ defaults.properties=sb.properties
 wk_deploy(@/oracle/oci/vm.tf)
 
 %paas
-//deploy_data_store(@/oracle/oci/dbcs_vm.tf)
+// deploy data store using terraform
+ds_deploy(@/oracle/oci/dbcs_vm.tf)
 
 %configure
 // screaming bench user
