@@ -25,7 +25,7 @@ wk_download(@Main.java,~/sb)
 wk_download(@ojdbc8.jar,~/sb/lib)
 wk_set_env(JAVA_HOME,~/sb/jdk-10.0.1)
 wk_set_env(PATH,+${JAVA_HOME}/bin)
-wk_run(~/sb,javac -cp Main.java)
+wk_run(~/sb,javac -cp Main.java,true)
 wk_run(~/sb,java -cp . org.sb.jsoninsert.Main 2,true)
 
 //install_bench(@./json-insert.jar,user=sb)
