@@ -1,4 +1,4 @@
-// Terraform template for Oracle Cloud Infrastructure VM
+// Terraform template for Oracle Cloud Infrastructure Base
 
 provider "oci" {
   tenancy_ocid     = "${var.tenancy_ocid}"
