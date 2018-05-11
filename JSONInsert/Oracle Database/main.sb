@@ -7,6 +7,7 @@ defaults.properties=sb.properties
 
 //--- Infrastructure ---
 %iaas
+wk_deploy(@/oracle/oci/base.tf)
 wk_deploy(@/oracle/oci/vm.tf)
 
 %paas
