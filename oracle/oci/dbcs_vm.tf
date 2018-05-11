@@ -101,40 +101,40 @@ resource "oci_core_subnet" "SN-SB-Data" {
   dhcp_options_id = "${oci_core_virtual_network.VCN-SB.default_dhcp_options_id}"
 }
 
-resource "oci_database_db_system" "SB-DataStore" {
+resource "oci_database_db_system" "SB-Datastore" {
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[var.datastore_availability_domain],"name")}"
   compartment_id = "${var.compartment_ocid}"
-  cpu_core_count = "${var.data_store["CPUCoreCount"]}"
-  database_edition = "${var.data_store["Edition"]}"
+  cpu_core_count = "${var.datastore["CPUCoreCount"]}"
+  database_edition = "${var.datastore["Edition"]}"
   db_home {
     database {
-      "admin_password" = "${var.data_store["AdminPassword"]}"
-      "db_name" = "${var.data_store["ContainerName"]}"
-      "character_set" = "${var.data_store["CharacterSet"]}"
-      "ncharacter_set" = "${var.data_store["NCharacterSet"]}"
-      "db_workload" = "${var.data_store["Workload"]}"
-      "pdb_name" = "${var.data_store["PDBName"]}"
+      "admin_password" = "${var.datastore["AdminPassword"]}"
+      "db_name" = "${var.datastore["ContainerName"]}"
+      "character_set" = "${var.datastore["CharacterSet"]}"
+      "ncharacter_set" = "${var.datastore["NCharacterSet"]}"
+      "db_workload" = "${var.datastore["Workload"]}"
+      "pdb_name" = "${var.datastore["PDBName"]}"
     }
-    db_version = "${var.data_store["Version"]}"
-    display_name = "${var.data_store["DisplayName"]}"
+    db_version = "${var.datastore["Version"]}"
+    display_name = "${var.datastore["DisplayName"]}"
   }
-  disk_redundancy = "${var.data_store["DiskRedundancy"]}"
-  shape = "${var.data_store["NodeShape"]}"
+  disk_redundancy = "${var.datastore["DiskRedundancy"]}"
+  shape = "${var.datastore["NodeShape"]}"
   subnet_id = "${oci_core_subnet.SN-SB-Data.id}"
   ssh_public_keys = ["${var.ssh_public_key}"]
-  display_name = "${var.data_store["NodeDisplayName"]}${var.sbName}"
-  domain = "${var.data_store["NodeDomainName"]}"
-  hostname = "${var.data_store["NodeHostName"]}"
-  data_storage_percentage = "${var.data_store["StoragePercent"]}"
-  data_storage_size_in_gb = "${var.data_store["StorageSizeInGB"]}"
-  license_model = "${var.data_store["LicenseModel"]}"
-  node_count = "${var.data_store["NodeCount"]}"
+  display_name = "${var.datastore["NodeDisplayName"]}${var.sbName}"
+  domain = "${var.datastore["NodeDomainName"]}"
+  hostname = "${var.datastore["NodeHostName"]}"
+  data_storage_percentage = "${var.datastore["StoragePercent"]}"
+  data_storage_size_in_gb = "${var.datastore["StorageSizeInGB"]}"
+  license_model = "${var.datastore["LicenseModel"]}"
+  node_count = "${var.datastore["NodeCount"]}"
 }
 
 # Get DB node list
 data "oci_database_db_nodes" "DBNodeList" {
   compartment_id = "${var.compartment_ocid}"
-  db_system_id = "${oci_database_db_system.SB-DataStore.id}"
+  db_system_id = "${oci_database_db_system.SB-Datastore.id}"
 }
 
 # Get DB node details
