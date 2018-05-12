@@ -51,3 +51,7 @@ output "SB-Datastore-PublicIPs" {
   value = ["${data.oci_core_vnic.DBNodeVnic.public_ip_address}"]
 }
 
+# Output the Private IP of the instance
+output "SB-Datastore-PrivateIPs" {
+  value = ["${data.oci_core_vnic.DBNodeVnic.private_ip_address}"]
+}
