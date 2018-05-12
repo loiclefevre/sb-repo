@@ -46,7 +46,8 @@ data "oci_core_vnic" "DBNodeVnic" {
   vnic_id = "${data.oci_database_db_node.DBNodeDetails.vnic_id}"
 }
 
-# Output the private IP of the instance
-output "DBNodePublicIP" {
+# Output the Public IP of the instance
+output "SB-Datastore-PublicIPs" {
   value = ["${data.oci_core_vnic.DBNodeVnic.public_ip_address}"]
 }
+
