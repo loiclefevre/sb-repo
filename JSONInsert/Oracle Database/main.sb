@@ -4,7 +4,7 @@ name=JSONInsert
 version=1.0.0
 variant=Oracle Database
 defaults.properties=sb.properties
-//authors=Loïc Lefèvre
+authors=Loïc Lefèvre
 
 //--- Infrastructure ---
 %iaas
@@ -31,8 +31,7 @@ wk_set_env(PATH,+${JAVA_HOME}/bin)
 wk_run(~/sb,javac -cp ./lib/ojdbc8.jar Main.java,true)
 wk_run(~/sb,java -cp .:./lib/ojdbc8.jar Main 2,true)
 
-//install_bench(@./json-insert.jar,user=sb)
-/* configure_data_store( ./jsoninsert-oracle ) */
+// ds_configure(@oracle_database_setup.sql)
 
 %run
 // java
