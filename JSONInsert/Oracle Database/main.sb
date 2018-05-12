@@ -4,6 +4,7 @@ name=JSONInsert
 version=1.0.0
 variant=Oracle Database
 defaults.properties=sb.properties
+//authors=Loïc Lefèvre
 
 //--- Infrastructure ---
 %iaas
