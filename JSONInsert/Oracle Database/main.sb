@@ -31,7 +31,7 @@ wk_set_env(PATH,+${JAVA_HOME}/bin)
 wk_run(~/sb,javac -cp ./lib/ojdbc8.jar Main.java,true)
 wk_run(~/sb,java -cp .:./lib/ojdbc8.jar Main 2,true)
 
-// ds_configure(@oracle_database_setup.sql)
+ds_configure(@oracle_database_setup.sql)
 
 %run
 // java
