@@ -1,0 +1,49 @@
+//--- Benchmark description ---
+%description
+name=JSONInsert
+version=1.0.0
+variant=Oracle Database
+defaults.properties=sb.properties
+authors=Loic Lefevre
+
+//--- Infrastructure ---
+%iaas.worker(terraform)
+@/oracle/oci/base.tf
+@/oracle/oci/vm.tf
+
+%paas.datastore(terraform)
+// deploy data store using terraform
+@/oracle/oci/dbcs_vm.tf
+
+%configure[parallel_worker_and_datastore]
+
+%configure.worker(shell)
+// screaming bench user
+useradd -p SBP@55w0rd! sb
+su - sb
+// download and uncompress open JDK 10
+wget -N --progress=dot https://download.java.net/java/GA/jdk10/10.0.1/fb4372174a714e6b8c52526dc134031e/10/openjdk-10.0.1_linux-x64_bin.tar.gz -O openjdk-10.0.1_linux-x64_bin.tar.gz
+mkdir -p ~/sb
+tar -xvf openjdk-10.0.1_linux-x64_bin.tar.gz -C ~/sb
+cd ~/sb
+wget -N --progress=dot https://raw.githubusercontent.com/loiclefevre/sb-repo/master/JSONInsert/Oracle%20Database/Main.java -O "Main.java"
+mkdir -p ~/sb/lib
+cd ~/sb/lib
+wget -N --progress=dot https://raw.githubusercontent.com/loiclefevre/sb-repo/master/JSONInsert/Oracle%20Database/ojdbc8.jar -O "ojdbc8.jar"
+
+%configure.worker(java[~/sb/jdk-10.0.1])
+javac -cp ./lib/ojdbc8.jar Main.java
+java -cp .:./lib/ojdbc8.jar Main 2
+
+%configure.datastore(oracle[ORCL,NOARCHIVELOG])
+@oracle_database_setup.sql
+@create_table.sql
+
+%configure[wait_for_parallel_worker_and_datastore]
+
+%run.worker(java)
+// java
+
+%report
+
+%destroy
