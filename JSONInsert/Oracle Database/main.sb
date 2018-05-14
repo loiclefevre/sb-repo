@@ -30,12 +30,14 @@ wk_download(@ojdbc8.jar,~/sb/lib,057478599050cf8999ced6069d3ccbf4)
 wk_set_env(JAVA_HOME,~/sb/jdk-10.0.1)
 wk_set_env(PATH,+${JAVA_HOME}/bin)
 wk_run(~/sb,javac -cp ./lib/ojdbc8.jar Main.java,true)
-wk_run(~/sb,java -cp .:./lib/ojdbc8.jar Main 2,true)
 
 ds_configure(@oracle_database_setup.sql)
 
 %run
 // java
+define_kpi(1,Docs/sec)
+define_kpi(2,$CPU_Average)
+wk_run_benchmark(~/sb,java -cp .:./lib/ojdbc8.jar Main,60,2)
 
 %report
 
