@@ -19,6 +19,8 @@ begin
 	select count(*) into e from DBA_TABLES where TABLE_NAME='JSONINSERT' and OWNER='SB';
 	if e = 0 then
 		execute immediate 'CREATE TABLE sb.JSONINSERT (doc_id NUMBER(16), doc_time DATE, json_data VARCHAR2(2000)) tablespace SB';
+	else
+		execute immediate 'TRUNCATE TABLE sb.JSONINSERT REUSE STORAGE';
 	end if;
 
 end;
