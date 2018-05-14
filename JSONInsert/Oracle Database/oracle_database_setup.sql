@@ -1,5 +1,7 @@
 alter session set container=SB;
 
+set serveroutput on size 1000000
+
 declare
     e number;
 begin
