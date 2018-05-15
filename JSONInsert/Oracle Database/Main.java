@@ -14,14 +14,14 @@ public class Main implements Runnable {
     }
 
     public static void main(String[] args) throws Throwable {
-        final int workers = args.length == 0 ? 4 : Integer.parseInt(args[0]);
+        final int workers = Integer.parseInt(System.getenv("SB_SCALE"));
         System.out.println("Running with "+workers+" worker(s)");
 
         OracleDataSource ods = new OracleDataSource();
 
         ods.setUser("sb");
-        ods.setPassword("");
-        ods.setURL("jdbc:oracle:thin:@//10.0.0.4:1521/sb.data.sb.oraclevcn.com");
+        ods.setPassword(System.getenv("SB_DATASTORE_PASSWORD"));
+        ods.setURL("jdbc:oracle:thin:@//"+System.getenv("SB_DATASTORE_IP")+":1521/sb.data.sb.oraclevcn.com");
 
         Properties connectionProperties = new Properties();
         connectionProperties.setProperty("autoCommit", "false");
