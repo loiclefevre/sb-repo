@@ -51,7 +51,7 @@ public class Main implements Runnable {
         }
 
 
-	System.out.println("Starting...");
+        System.out.println("Starting...");
         final long start = System.currentTimeMillis();
         for (Main m : threads) {
             new Thread(tg, m).start();
@@ -59,7 +59,7 @@ public class Main implements Runnable {
 
         Thread.sleep(duration * 1000L);
         System.out.println("Interrupting thread group...");
-	tg.interrupt();
+        tg.interrupt();
         final long end = System.currentTimeMillis();
 
         long docsInsertedTotal = 0;
@@ -76,8 +76,6 @@ public class Main implements Runnable {
     public void run() {
         if (ps == null) return;
 
-	docsInserted = 0
-		    
         try {
             final String json = "{\"ID\": 9999999, \"FirstName\": \"FirstName\", \"LastName\": \"LastName\", \"Nationality\": \"GB\"}";
             final long batchsize = 500L;
@@ -102,7 +100,7 @@ public class Main implements Runnable {
                     running = !Thread.interrupted();
                 }
             }
-                
+
             if (batchsize != -1L) {
                 ps.executeBatch();
             }
@@ -121,7 +119,7 @@ public class Main implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-	finally {
-	}
+        finally {
+        }
     }
 }
