@@ -118,7 +118,7 @@ public class Main implements Runnable {
 
             ps.close();
             connection.close();
-        } catch (Exception sqle) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 	finally {
