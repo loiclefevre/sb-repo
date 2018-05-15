@@ -3,7 +3,7 @@ import oracle.jdbc.pool.OracleDataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Properties;
+import java.util.*;
 
 public class Main implements Runnable {
 
@@ -15,7 +15,8 @@ public class Main implements Runnable {
 
     public static void main(String[] args) throws Throwable {
         final int workers = Integer.parseInt(System.getenv("SB_SCALE"));
-        System.out.println("Running with "+workers+" worker(s)");
+        final int duration = Integer.parseInt(System.getenv("SB_DURATION"));
+        System.out.println("Running with "+workers+" worker(s) for "+duration+" second(s)");
 
         OracleDataSource ods = new OracleDataSource();
 
@@ -28,10 +29,18 @@ public class Main implements Runnable {
         connectionProperties.setProperty("oracle.jdbc.fanEnabled", "false");
         ods.setConnectionProperties(connectionProperties);
 
+        ThreadGroup tg = new ThreadGroup("JSONInsert");
+        tg.setMaxPriority(Thread.MAX_PRIORITY);
+        
+        List<Main> threads = new ArrayList<>();
+        
         for(int i = 0; i < workers; i++) {
             Connection connection = ods.getConnection();
-            new Thread(new Main(connection)).start();
+            new Thread(tg, new Main(connection)).start();
         }
+        
+        Thread.sleep(duration * 1000L);
+        tg.interrupt();
     }
 
     @Override
