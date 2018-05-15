@@ -68,14 +68,14 @@ resource "oci_core_default_security_list" "default_security_list" {
     }
   }
 
-  // allow inbound VNC traffic
+  // allow inbound Oracle Database traffic
   ingress_security_rules {
     protocol = "6" // tcp
     source = "0.0.0.0/0"
     stateless = false
     tcp_options {
-      min = 5901
-      max = 5901
+      min = 1521
+      max = 1521
     }
   }
 }
