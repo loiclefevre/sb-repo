@@ -16,8 +16,7 @@ public class Main implements Runnable {
         this.docsInserted = 0;
         try {
             ps = connection.prepareStatement("insert into ANPR_COLLECTION(anprid,collection_time,json_data) values (?,SYSDATE,?)");
-        }
-        catch (SQLException sqle) {
+        } catch (SQLException sqle) {
             sqle.printStackTrace();
             ps = null;
         }
@@ -26,13 +25,13 @@ public class Main implements Runnable {
     public static void main(String[] args) throws Throwable {
         final int workers = Integer.parseInt(System.getenv("SB_SCALE"));
         final int duration = Integer.parseInt(System.getenv("SB_DURATION"));
-        System.out.println("Running with "+workers+" worker(s) for "+duration+" second(s)");
+        System.out.println("Running with " + workers + " worker(s) for " + duration + " second(s)");
 
         OracleDataSource ods = new OracleDataSource();
 
         ods.setUser("sb");
         ods.setPassword(System.getenv("SB_DATASTORE_PASSWORD"));
-        ods.setURL("jdbc:oracle:thin:@//"+System.getenv("SB_DATASTORE_IP")+":1521/sb.data.sb.oraclevcn.com");
+        ods.setURL("jdbc:oracle:thin:@//" + System.getenv("SB_DATASTORE_IP") + ":1521/sb.data.sb.oraclevcn.com");
 
         Properties connectionProperties = new Properties();
         connectionProperties.setProperty("autoCommit", "false");
@@ -41,43 +40,45 @@ public class Main implements Runnable {
 
         ThreadGroup tg = new ThreadGroup("JSONInsert");
         tg.setMaxPriority(Thread.MAX_PRIORITY);
-        
+
         List<Main> threads = new ArrayList<>();
-        
-        for(int i = 0; i < workers; i++) {
+
+        for (int i = 0; i < workers; i++) {
             Connection connection = ods.getConnection();
             Main m = new Main(connection);
             threads.add(m);
         }
 
         final long start = System.currentTimeMillis();
-        for(Main m : threads) {
+        for (Main m : threads) {
             new Thread(tg, m).start();
         }
-        
+
         Thread.sleep(duration * 1000L);
         tg.interrupt();
         final long end = System.currentTimeMillis();
-        
+
         long docsInserted = 0;
-        
-        for(Main m : threads) {
+
+        for (Main m : threads) {
             docsInserted += m.docsInserted;
         }
-        
+
         System.out.println("--- RESULTS ---");
-        System.out.println("Docs/sec="+((double)docsInserted / (end-start) / 1000.0d ));
+        System.out.println("Docs/sec=" + ((double) docsInserted / (end - start) / 1000.0d));
     }
 
     @Override
     public void run() {
-        if( ps == null) return;
-        
+        if (ps == null) return;
+
         try {
             final String json = "{\"ID\": 9999999, \"FirstName\": \"FirstName\", \"LastName\": \"LastName\", \"Nationality\": \"GB\"}";
             final long batchsize = 500L;
             final long commitFrequency = 15000L;
-            for (long docsInserted = 0; ; ++docsInserted) {
+            boolean running = true;
+
+            for (long docsInserted = 0; running; ++docsInserted) {
                 ps.setLong(1, docsInserted);
                 ps.setString(2, json);
                 if (batchsize != -1L) {
@@ -92,9 +93,10 @@ public class Main implements Runnable {
 
                 if (docsInserted % commitFrequency == 0L) {
                     connection.commit();
+                    running = !Thread.interrupted();
                 }
             }
-
+                
             if (batchsize != -1L) {
                 ps.executeBatch();
             }
@@ -110,8 +112,7 @@ public class Main implements Runnable {
 
             ps.close();
             connection.close();
-        }
-        catch (SQLException sqle) {
+        } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
     }
