@@ -100,7 +100,6 @@ public class Main implements Runnable {
                 if (docsInserted % commitFrequency == 0L) {
                     connection.commit();
                     running = !Thread.interrupted();
-		    System.out.println("Tested if thread was interrupted: "+running);
                 }
             }
                 
