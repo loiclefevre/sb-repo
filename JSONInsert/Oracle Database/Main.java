@@ -62,13 +62,14 @@ public class Main implements Runnable {
         tg.interrupt();
         final long end = System.currentTimeMillis();
 
-        long docsInsertedTotal = 0;
+        long docsInsertedTotal = 0L;
 
         for (Main m : threads) {
             docsInsertedTotal += m.docsInserted;
         }
 
         System.out.println("--- RESULTS ---");
+        System.out.println("Total Docs inserted="+docsInsertedTotal);
         System.out.println("Docs/sec=" + ((double) docsInsertedTotal / (end - start) / 1000.0d));
     }
 
@@ -117,7 +118,7 @@ public class Main implements Runnable {
             ps.close();
             connection.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         finally {
         }
