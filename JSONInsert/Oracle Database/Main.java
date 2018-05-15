@@ -70,7 +70,7 @@ public class Main implements Runnable {
 
         System.out.println("--- RESULTS ---");
         System.out.println("Total Docs inserted="+docsInsertedTotal);
-        System.out.println("Docs/sec=" + ((double) docsInsertedTotal / (end - start) / 1000.0d));
+        System.out.println("Docs/sec=" + ((double) docsInsertedTotal / ((end - start) / 1000.0d)));
     }
 
     @Override
