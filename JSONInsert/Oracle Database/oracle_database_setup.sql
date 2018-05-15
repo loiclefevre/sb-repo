@@ -12,7 +12,7 @@ begin
 
 	select count(*) into e from DBA_USERS where USERNAME='SB';
 	if e = 0 then
-		execute immediate 'GRANT CREATE SESSION TO sb IDENTIFIED BY ${oci.datastore_password}';
+		execute immediate 'GRANT CREATE SESSION TO sb IDENTIFIED BY ${datastore.password}';
 		execute immediate 'ALTER USER sb DEFAULT TABLESPACE SB';
 		execute immediate 'alter user sb quota unlimited on SB';
 		execute immediate 'GRANT CREATE TABLE TO sb';
