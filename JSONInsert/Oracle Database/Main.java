@@ -15,7 +15,7 @@ public class Main implements Runnable {
         this.connection = con;
         this.docsInserted = 0;
         try {
-            ps = connection.prepareStatement("insert into ANPR_COLLECTION(anprid,collection_time,json_data) values (?,SYSDATE,?)");
+            ps = connection.prepareStatement("insert into JSONINSERT(doc_id,doc_time,json_data) values (?,SYSDATE,?)");
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             ps = null;
@@ -29,7 +29,7 @@ public class Main implements Runnable {
 
         OracleDataSource ods = new OracleDataSource();
 
-        ods.setUser("sb");
+        ods.setUser(System.getenv("SB_DATASTORE_LOGIN"));
         ods.setPassword(System.getenv("SB_DATASTORE_PASSWORD"));
         ods.setURL("jdbc:oracle:thin:@//" + System.getenv("SB_DATASTORE_IP") + ":1521/sb.data.sb.oraclevcn.com");
 
@@ -38,8 +38,9 @@ public class Main implements Runnable {
         connectionProperties.setProperty("oracle.jdbc.fanEnabled", "false");
         ods.setConnectionProperties(connectionProperties);
 
+
         ThreadGroup tg = new ThreadGroup("JSONInsert");
-        tg.setMaxPriority(Thread.MAX_PRIORITY);
+        //tg.setMaxPriority(Thread.MAX_PRIORITY);
 
         List<Main> threads = new ArrayList<>();
 
@@ -49,13 +50,16 @@ public class Main implements Runnable {
             threads.add(m);
         }
 
+
+	System.out.println("Starting...");
         final long start = System.currentTimeMillis();
         for (Main m : threads) {
             new Thread(tg, m).start();
         }
 
         Thread.sleep(duration * 1000L);
-        tg.interrupt();
+        System.out.println("Interrupting thread group...");
+	tg.interrupt();
         final long end = System.currentTimeMillis();
 
         long docsInserted = 0;
@@ -94,6 +98,7 @@ public class Main implements Runnable {
                 if (docsInserted % commitFrequency == 0L) {
                     connection.commit();
                     running = !Thread.interrupted();
+		    System.out.println("Tested if thread was interrupted: "+running);
                 }
             }
                 
