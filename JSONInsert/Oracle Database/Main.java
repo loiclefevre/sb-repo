@@ -62,27 +62,29 @@ public class Main implements Runnable {
 	tg.interrupt();
         final long end = System.currentTimeMillis();
 
-        long docsInserted = 0;
+        long docsInsertedTotal = 0;
 
         for (Main m : threads) {
-            docsInserted += m.docsInserted;
+            docsInsertedTotal += m.docsInserted;
         }
 
         System.out.println("--- RESULTS ---");
-        System.out.println("Docs/sec=" + ((double) docsInserted / (end - start) / 1000.0d));
+        System.out.println("Docs/sec=" + ((double) docsInsertedTotal / (end - start) / 1000.0d));
     }
 
     @Override
     public void run() {
         if (ps == null) return;
 
+	docsInserted = 0
+		    
         try {
             final String json = "{\"ID\": 9999999, \"FirstName\": \"FirstName\", \"LastName\": \"LastName\", \"Nationality\": \"GB\"}";
             final long batchsize = 500L;
             final long commitFrequency = 15000L;
             boolean running = true;
 
-            for (long docsInserted = 0; running; ++docsInserted) {
+            for (; running; ++docsInserted) {
                 ps.setLong(1, docsInserted);
                 ps.setString(2, json);
                 if (batchsize != -1L) {
@@ -117,8 +119,10 @@ public class Main implements Runnable {
 
             ps.close();
             connection.close();
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
+        } catch (Exception sqle) {
+            e.printStackTrace();
         }
+	finally {
+	}
     }
 }
