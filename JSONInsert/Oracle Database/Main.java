@@ -8,9 +8,19 @@ import java.util.*;
 public class Main implements Runnable {
 
     Connection connection;
+    PreparedStatement ps;
+    long docsInserted;
 
     public Main(Connection con) {
         this.connection = con;
+        this.docsInserted = 0;
+        try {
+            ps = connection.prepareStatement("insert into ANPR_COLLECTION(anprid,collection_time,json_data) values (?,SYSDATE,?)");
+        }
+        catch (SQLException sqle) {
+            sqle.printStackTrace();
+            ps = null;
+        }
     }
 
     public static void main(String[] args) throws Throwable {
@@ -36,25 +46,39 @@ public class Main implements Runnable {
         
         for(int i = 0; i < workers; i++) {
             Connection connection = ods.getConnection();
-            new Thread(tg, new Main(connection)).start();
+            Main m = new Main(connection);
+            threads.add(m);
+        }
+
+        final long start = System.currentTimeMillis();
+        for(Main m : threads) {
+            new Thread(tg, m).start();
         }
         
         Thread.sleep(duration * 1000L);
         tg.interrupt();
+        final long end = System.currentTimeMillis();
+        
+        long docsInserted = 0;
+        
+        for(Main m : threads) {
+            docsInserted += m.docsInserted;
+        }
+        
+        System.out.println("--- RESULTS ---");
+        System.out.println("Docs/sec="+((double)docsInserted / (end-start) / 1000.0d ));
     }
 
     @Override
     public void run() {
+        if( ps == null) return;
+        
         try {
-            PreparedStatement ps = connection.prepareStatement("insert into ANPR_COLLECTION(anprid,collection_time,json_data) values (?,SYSDATE,?)");
-
             final String json = "{\"ID\": 9999999, \"FirstName\": \"FirstName\", \"LastName\": \"LastName\", \"Nationality\": \"GB\"}";
-            final long rowsToInsert = 600000L;
             final long batchsize = 500L;
             final long commitFrequency = 15000L;
-            final long start = System.currentTimeMillis();
-            for (long i = 0; i < rowsToInsert; ++i) {
-                ps.setLong(1, i);
+            for (long docsInserted = 0; ; ++docsInserted) {
+                ps.setLong(1, docsInserted);
                 ps.setString(2, json);
                 if (batchsize != -1L) {
                     ps.addBatch();
@@ -62,11 +86,11 @@ public class Main implements Runnable {
                     ps.executeUpdate();
                 }
 
-                if (i % batchsize == 0L) {
+                if (docsInserted % batchsize == 0L) {
                     ps.executeBatch();
                 }
 
-                if (i % commitFrequency == 0L) {
+                if (docsInserted % commitFrequency == 0L) {
                     connection.commit();
                 }
             }
@@ -77,7 +101,7 @@ public class Main implements Runnable {
 
             connection.commit();
 
-            System.out.println((double) rowsToInsert / ((System.currentTimeMillis() - start) / 1000.0) + " msgs/sec");
+//            System.out.println((double) rowsToInsert / ((System.currentTimeMillis() - start) / 1000.0) + " msgs/sec");
 
 //        if (doAsync) {
 //            connection.createStatement().execute("ALTER SESSION SET COMMIT_WRITE = NOWAIT");
