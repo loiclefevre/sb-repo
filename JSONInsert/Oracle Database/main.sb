@@ -37,7 +37,7 @@ ds_configure(@oracle_database_setup.sql)
 // java
 define_kpi(1,Docs/sec)
 define_kpi(2,$CPU_Average)
-wk_run_benchmark(~/sb,java -cp .:./lib/ojdbc8.jar Main,10,2)
+wk_run_benchmark(~/sb,java -cp .:./lib/ojdbc8.jar Main,10,4)
 
 %report
 
