@@ -1,2 +1,26 @@
-//
+//--- Benchmark description ---
 %description
+name=JSONInsert
+version=1.0.0
+variant=Oracle NoSQL Database
+defaults.properties=sb.properties
+authors=Loic Lefevre
+
+//--- Infrastructure ---
+%iaas
+
+// worker
+wk_deploy(@/oracle/oci/base.tf)
+wk_deploy(@/oracle/oci/vm.tf)
+
+// deploy datastore cluster using terraform
+ds_deploy_cluster(@/oracle/oci/vm_cluster.tf)
+
+%configure
+// screaming bench user
+// wk_create_user(sb)
+// wk_set_user(sb)
+
+// download and uncompress open JDK 10
+// wk_download_and_uncompress(https://download.java.net/java/GA/jdk10/10.0.1/fb4372174a714e6b8c52526dc134031e/10/openjdk-10.0.1_linux-x64_bin.tar.gz,~/sb,0b14aaecd5323457bd15dc7798d08181ad04bad4156e55387ed714190912a9ce)
+
