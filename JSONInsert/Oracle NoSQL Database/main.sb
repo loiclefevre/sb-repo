@@ -14,7 +14,7 @@ wk_deploy(@/oracle/oci/base.tf)
 wk_deploy(@/oracle/oci/vm.tf)
 
 // deploy datastore cluster using terraform
-ds_deploy_cluster(@/oracle/oci/vm_cluster.tf)
+// ds_deploy_cluster(@/oracle/oci/vm_cluster.tf)
 
 %configure
 // screaming bench user
