@@ -84,7 +84,7 @@ resource "oci_core_default_route_table" "default_route_table" {
   manage_default_resource_id = "${oci_core_virtual_network.VCN-SB.default_route_table_id}"
   display_name = "Default Route Table for VCN-SB-${var.sbName}"
   route_rules {
-    cidr_block = "0.0.0.0/0"
+    destination = "0.0.0.0/0"
     network_entity_id = "${oci_core_internet_gateway.IG-SB.id}"
   }
 }
